@@ -1,6 +1,7 @@
-'''
-在线验证邮箱真实性
-'''
+# coding: utf8
+#
+# 在线验证邮箱真实性
+#
 
 import random
 import smtplib
@@ -16,23 +17,23 @@ logger = logging.getLogger()
 
 
 def fetch_mx(host):
-    '''
-    解析服务邮箱
-    :param host:
-    :return:
-    '''
-    logger.info('正在查找邮箱服务器')
+    #
+    # 解析服务邮箱
+    # :param host:
+    # :return:
+    # 
+    logger.info('Finding mail server...')
     answers = dns.resolver.query(host, 'MX')
     res = [str(rdata.exchange)[:-1] for rdata in answers]
-    logger.info('查找结果为：%s' % res)
+    logger.info('Search result：%s' % res)
     return res
 
 
 def verify_istrue(email):
-    '''
-    :param email:
-    :return:
-    '''
+    #
+    # :param email:
+    # :return:
+    #
     email_list = []
     email_obj = {}
     final_res = {}
@@ -50,13 +51,13 @@ def verify_istrue(email):
 
     for key in email_obj.keys():
         host = random.choice(fetch_mx(key))
-        logger.info('正在连接服务器...：%s' % host)
+        logger.info('Connecting server...：%s' % host)
         s = smtplib.SMTP(host, timeout=10)
         for need_verify in email_obj[key]:
             helo = s.docmd('HELO chacuo.net')
             logger.debug(helo)
 
-            send_from = s.docmd('MAIL FROM:<3121113@chacuo.net>')
+            send_from = s.docmd('MAIL FROM:<james.li@nike.com>')
             logger.debug(send_from)
             send_from = s.docmd('RCPT TO:<%s>' % need_verify)
             logger.debug(send_from)
@@ -73,8 +74,7 @@ def verify_istrue(email):
 
 
 if __name__ == '__main__':
-    final_list = verify_istrue(['tengzhaoyou@testin.cn',
-                                '190758586@qq.com',
-                                'qwer111111111111995@163.com'
+    final_list = verify_istrue(['V19309950748@snkrs.mobi', '51931701@qq.com',
+    '1260472871361@qq.com', 'lmbcop7845@foxmail.com'
                                 ])
     print(final_list)
